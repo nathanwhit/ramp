@@ -12,12 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-use std;
 use std::cmp::{Ordering, PartialEq, PartialOrd};
 use std::fmt;
 use std::ops::{Add, BitAnd, BitOr, BitXor, Div, Mul, Neg, Not, Rem, Shl, Shr, Sub};
-
-use std::intrinsics::assume;
 
 use ::std::num::Wrapping;
 #[allow(dead_code)]
@@ -75,7 +72,7 @@ impl Limb {
      */
     #[inline(always)]
     pub fn add_overflow(self, other: Limb) -> (Limb, bool) {
-        let (val, c) = std::intrinsics::add_with_overflow(self.0, other.0);
+        let (val, c) = self.0.overflowing_add(other.0);
         (Limb(val), c)
     }
 
@@ -84,7 +81,7 @@ impl Limb {
      */
     #[inline(always)]
     pub fn sub_overflow(self, other: Limb) -> (Limb, bool) {
-        let (val, c) = std::intrinsics::sub_with_overflow(self.0, other.0);
+        let (val, c) = self.0.overflowing_sub(other.0);
         (Limb(val), c)
     }
 
@@ -251,9 +248,6 @@ impl Div<Limb> for Limb {
     #[inline(always)]
     fn div(self, other: Limb) -> Limb {
         debug_assert!(other.0 != 0);
-        unsafe {
-            assume(other.0 != 0);
-        }
         Limb(self.0 / other.0)
     }
 }
@@ -264,9 +258,6 @@ impl Div<BaseInt> for Limb {
     #[inline(always)]
     fn div(self, other: BaseInt) -> Limb {
         debug_assert!(other != 0);
-        unsafe {
-            assume(other != 0);
-        }
         Limb(self.0 / other)
     }
 }
@@ -277,9 +268,6 @@ impl Rem<Limb> for Limb {
     #[inline(always)]
     fn rem(self, other: Limb) -> Limb {
         debug_assert!(other.0 != 0);
-        unsafe {
-            assume(other.0 != 0);
-        }
         Limb(self.0 % other.0)
     }
 }
@@ -290,9 +278,6 @@ impl Rem<BaseInt> for Limb {
     #[inline(always)]
     fn rem(self, other: BaseInt) -> Limb {
         debug_assert!(other != 0);
-        unsafe {
-            assume(other != 0);
-        }
         Limb(self.0 % other)
     }
 }
@@ -751,10 +736,6 @@ pub fn div(nh: Limb, nl: Limb, d: Limb) -> (Limb, Limb) {
 
     debug_assert!(d.high_bit_set());
     debug_assert!(nh < d);
-    unsafe {
-        assume(nh < d);
-        assume(d.high_bit_set());
-    }
 
     return div_impl(nh, nl, d);
 }

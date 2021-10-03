@@ -15,6 +15,10 @@ documentation = "https://docs.rs/ramp"
 name = "ramp"
 path = "src/lib.rs"
 
+[[bench]]
+name = "benchmark"
+harness = false
+
 [features]
 unstable = [] # To keep travis-cargo happy
 fallbacks = []
@@ -36,5 +40,7 @@ rustc-cfg = "0.4"
 cc = "1.0"
 
 [dev-dependencies]
+criterion = "0.3.5"
 num-bigint = "0.4"
 quickcheck = "0.6"
+rand_pcg = "0.3.1"

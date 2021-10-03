@@ -13,7 +13,6 @@
 //    limitations under the License.
 
 use std::cmp::{self, Ordering};
-use std::intrinsics::assume;
 
 use super::{overlap, same_or_separate};
 use ll;
@@ -32,10 +31,6 @@ pub unsafe fn divrem_1(mut qp: LimbsMut, qxn: i32, xp: Limbs, mut xs: i32, d: Li
     debug_assert!(xs >= 0);
     debug_assert!(d != 0);
     debug_assert!(same_or_separate(qp.offset(qxn as isize), xs, xp, xs));
-
-    assume(qxn >= 0);
-    assume(xs >= 0);
-    assume(d != 0);
 
     let mut n = xs + qxn;
     if n == 0 {

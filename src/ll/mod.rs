@@ -76,8 +76,6 @@
 //!   the length applies to both pointers and so comes after both of them.
 
 use std::cmp::Ordering;
-use std::intrinsics::abort;
-
 mod addsub;
 mod bit;
 mod div;
@@ -187,7 +185,7 @@ pub fn divide_by_zero() -> ! {
     if cfg!(debug_assertions) {
         panic!("divide by zero")
     } else {
-        abort();
+        std::process::abort();
     }
 }
 

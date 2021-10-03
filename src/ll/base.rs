@@ -20,8 +20,6 @@
  * base-10 input contains bytes each with a value from 0-9.
  */
 
-use std::intrinsics::assume;
-
 use ll;
 use ll::limb::Limb;
 use ll::limb_ptr::{Limbs, LimbsMut};
@@ -52,7 +50,6 @@ fn div_unnorm(n: Limb, d: Limb) -> (Limb, Limb) {
 /// Returns 1 if the number is 0;
 pub unsafe fn num_base_digits(p: Limbs, n: i32, base: u32) -> usize {
     debug_assert!(base >= 2);
-    assume(base >= 2);
 
     if n == 0 { return 1; }
 
@@ -105,8 +102,6 @@ pub unsafe fn to_base<F: FnMut(u8)>(base: u32, np: Limbs, nn: i32, mut out_byte:
     debug_assert!(nn >= 0);
     debug_assert!(base < BASES.len() as u32);
     debug_assert!(base >= 2);
-    assume(base < BASES.len() as u32);
-    assume(base >= 2);
 
     if nn <= 0 {
         out_byte(0);
@@ -115,7 +110,6 @@ pub unsafe fn to_base<F: FnMut(u8)>(base: u32, np: Limbs, nn: i32, mut out_byte:
     // Fast path for powers-of-two, since each limb is already in base B^m format
     if base.is_power_of_two() {
         let bits_per_digit = BASES.get_unchecked(base as usize).big_base.0 as usize;
-        assume(bits_per_digit > 0);
 
         let mut n1 = *np.offset((nn - 1) as isize);
         let cnt = n1.leading_zeros() as usize;
@@ -262,8 +256,6 @@ pub unsafe fn from_base(mut out: LimbsMut, bp: *const u8, bs: i32, base: u32) ->
     debug_assert!(bs > 0);
     debug_assert!(base < BASES.len() as u32);
     debug_assert!(base >= 2);
-    assume(base < BASES.len() as u32);
-    assume(base >= 2);
 
     if bs <= 0 {
         *out = Limb(0);
@@ -272,7 +264,6 @@ pub unsafe fn from_base(mut out: LimbsMut, bp: *const u8, bs: i32, base: u32) ->
 
     if base.is_power_of_two() {
         let bits_per_digit = BASES.get_unchecked(base as usize).big_base.0 as usize;
-        assume(bits_per_digit > 0);
 
         let mut size = 0;
 
@@ -308,7 +299,6 @@ pub unsafe fn from_base(mut out: LimbsMut, bp: *const u8, bs: i32, base: u32) ->
 
 unsafe fn from_base_small(mut out: LimbsMut, mut bp: *const u8, bs: i32, base: u32) -> usize {
     debug_assert!(base > 2);
-    assume(base > 2);
 
     let big_base = BASES.get_unchecked(base as usize).big_base;
     let digits_per_limb = BASES.get_unchecked(base as usize).digits_per_limb;

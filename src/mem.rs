@@ -16,7 +16,7 @@
 //! be used for anything that requires an alignment greater than that.
 
 use std::alloc;
-use std::intrinsics::abort;
+use std::process::abort;
 use std::io::{self, Write};
 use std::mem;
 use std::ptr;
